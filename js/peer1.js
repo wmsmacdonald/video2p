@@ -20,13 +20,14 @@ var video = document.querySelector('video');
 
 function getVideo() {
   GET('/chrome.webm', function(uInt8Array) {
-    var blob = new Blob([uInt8Array], {
+    /*var blob = new Blob([uInt8Array], {
       type: 'video/webm'
-    });
+    });*/
 
     conn.on('open', function() {
         console.log("sending");
-        conn.send(blob);
+        console.log(uInt8Array);
+        conn.send(uInt8Array);
         console.log("sent");
     });
     //writeToFile(fileEntry, blob);
