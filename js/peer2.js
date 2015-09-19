@@ -12,14 +12,15 @@ var peer = new Peer('2', {key: 'b6xifzskur3sor' });
 function getVideo(fileEntry) {
   peer.on('connection', function(conn){
     conn.on('data', function(blob){
+      console.log(blob);
       writeToFile(fileEntry, blob);
-  });
-    }) 
+    });
+  }); 
 }
 var video = document.querySelector('video');
   
 
-/*function getVideo(  fileEntry( {
+/*functiont getVideo(  fileEntry( {
   GET('/chrome.webm', function(uInt8Array) {
     var blob = new Blob([uInt8Array], {
       type: 'video/webm'
