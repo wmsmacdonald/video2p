@@ -11,21 +11,29 @@
 var peer = new Peer('1', {key: 'b6xifzskur3sor'});
 
 var conn = peer.connect('2');
-conn.on('open', function() {
+/*conn.on('open', function() {
   conn.send('hi!');
-});
+});*/
 
 
 var video = document.querySelector('video');
 
-function getVideo(fileEntry) {
+function getVideo() {
   GET('/chrome.webm', function(uInt8Array) {
     var blob = new Blob([uInt8Array], {
       type: 'video/webm'
     });
-    writeToFile(fileEntry, blob);
+
+    conn.on('open', function() {
+        console.log("sending");
+        conn.send(blob);
+        console.log("sent");
+    });
+    //writeToFile(fileEntry, blob);
   });
 }
+
+getVideo();
 
 function GET(url, callback) {
   var xhr = new XMLHttpRequest();
@@ -42,6 +50,8 @@ function GET(url, callback) {
   };
 }
 
+
+/*
 // code adapted from HTML5 Rocks article by Eric Bidelman
 // http://www.html5rocks.com/en/tutorials/file/filesystem/
 
@@ -53,7 +63,7 @@ function GET(url, callback) {
 window.requestFileSystem =
   window.requestFileSystem || window.webkitRequestFileSystem;
 
-window.requestFileSystem(window.TEMPORARY, 5 * 1024 * 1024 /*5MB*/ ,
+window.requestFileSystem(window.TEMPORARY, 5 * 1024 * 1024 // 5MB ,
   handleInitSuccess, handleError);
 
 var fileSystem;
@@ -67,7 +77,7 @@ function handleInitSuccess(fileSystem) {
 function createFile(fullPath) {
   fileSystem.root.getFile(fullPath, {
       create: true,
-      /*exclusive: true*/
+      //exclusive: true
     },
     function(fileEntry) {
       log('Created file: ' + fileEntry.fullPath);
@@ -142,3 +152,5 @@ document.querySelector('video').addEventListener('loadedmetadata', function() {
     '<br /> videoWidth: ' + this.videoWidth + 'px<br /> videoHeight: ' + this
     .videoHeight + 'px';
 });
+
+*/

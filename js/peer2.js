@@ -9,23 +9,24 @@
 //
 
 var peer = new Peer('2', {key: 'b6xifzskur3sor' });
-
-peer.on('connection', function(conn){
-  conn.on('data', function(data){
-    alert(data);
-  });
-});
-
-var video = document.querySelector('video');
-
 function getVideo(fileEntry) {
+  peer.on('connection', function(conn){
+    conn.on('data', function(blob){
+      writeToFile(fileEntry, blob);
+  });
+    }) 
+}
+var video = document.querySelector('video');
+  
+
+/*function getVideo(  fileEntry( {
   GET('/chrome.webm', function(uInt8Array) {
     var blob = new Blob([uInt8Array], {
       type: 'video/webm'
     });
     writeToFile(fileEntry, blob);
   });
-}
+}*/
 
 function GET(url, callback) {
   var xhr = new XMLHttpRequest();
