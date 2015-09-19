@@ -8,7 +8,7 @@
 // play video
 //
 
-var peer = new Peer('1', {host: 'localhost', port: 9000, path: '/'});
+var peer = new Peer('1', {host: 'quotacle.com', port: 9000, path: '/'});
 
 var conn = peer.connect('2');
 /*conn.on('open', function() {

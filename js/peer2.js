@@ -8,7 +8,7 @@
 // play video
 //
 
-var peer = new Peer('2', {host: 'localhost', port: 9000, path: '/'});
+var peer = new Peer('2', {host: 'quotacle.com', port: 9000, path: '/'});
 function getVideo(fileEntry) {
   peer.on('connection', function(conn){
     conn.on('data', function(uInt8Array){
