@@ -51,6 +51,8 @@ function sourceOpen(e) {
 
                 reader.onload = function( idx ) {
 
+                    console.log( "reader onload" );
+
                     var blob = new Blob( [uInt8Array], {type: 'video/webm'} );
                 
                     sourceBuffer.appendBuffer( uInt8Array );
