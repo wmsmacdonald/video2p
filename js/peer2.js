@@ -30,41 +30,40 @@ var mediaSource = new MediaSource();
 var video = document.querySelector('video');
 video.src = window.URL.createObjectURL( mediaSource );
 
-mediaSource.addEventListener('sourceopen', callback, false);
-mediaSource.addEventListener('webkitsourceopen', callback, false);
+mediaSource.addEventListener('sourceopen', sourceOpen, false);
+mediaSource.addEventListener('webkitsourceopen', sourceOpen, false);
 
-var sourceBuffer = mediaSource.addSourceBuffer( 'video/webm; codecs="vorbis,vp8"' );
 
 var numChunks = 5;
 
 var i = 0;
 
-function callback( e ) {
+function sourceOpen(e) {
+    var sourceBuffer = mediaSource.addSourceBuffer( 'video/webm; codecs="vorbis,vp8"' );
 
+    peer.on( 'connection', function( conn ) {
+        conn.on( 'data', function(uInt8Array) {
+            console.log("receiving chunk " + i);
 
-peer.on( 'connection', function( conn ) {
-    conn.on( 'data', function(uInt8Array) {
+            if( i < numChunks ) {
+    
+                var blob = new Blob( [uInt8Array], {type: 'video/webm'} );
+                
+                sourceBuffer.appendBuffer( new Uint8Array( e.target.result ) );
+             
+                if( video.paused ) {
+                    video.play();
+                }
 
-        if( i < numChunks ) {
+                if( i === numChunks - 1 ) {
+                    mediaSource.endOfStream();
+                }
 
-            var blob = new Blob( [uInt8Array], {type: 'video/webm'} );
-
-            sourceBuffer.appendBuffer( new Uint8Array( e.target.result ) );
-            
-            if( video.paused ) {
-                video.play();
+                i++; 
             }
-
-            if( i === numChunks - 1 ) {
-                mediaSource.endOfStream();
-            }
-
-            i++; 
-        }
         
+        });
     });
-});
-
 }
 
 function GET(url, callback) {
@@ -75,6 +74,7 @@ function GET(url, callback) {
 
   xhr.onload = function() {
     if (xhr.status !== 200) {
+
       alert('Unexpected status code ' + xhr.status + ' for ' + url);
       return false;
     }

@@ -11,16 +11,13 @@
 var peer = new Peer('1', {host: 'quotacle.com', port: 9000, path: '/', debug: true});
 
 var conn = peer.connect('2');
-/*conn.on('open', function() {
-  conn.send('hi!');
-});*/
 
 
 var video = document.querySelector('video');
 
 var numChunks = 5;
 
-
+var i = 0;
 function getVideo() {
   GET('/chrome.webm', function(uInt8Array) {
     /*var blob = new Blob([uInt8Array], {
@@ -33,7 +30,7 @@ function getVideo() {
 
             var chunkSize = Math.ceil( uInt8Array.length / numChunks );
             var startByte = chunkSize * i;
-            var chunk = uInt8Array.slice( startByte, startByt + chunkSize );
+            var chunk = uInt8Array.slice( startByte, startByte + chunkSize );
 
             console.log( "sending chunk " + i );
             conn.send (uInt8Array );
