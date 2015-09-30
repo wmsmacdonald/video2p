@@ -45,7 +45,7 @@ function sourceOpen(e) {
         conn.on( 'data', function(uInt8Array) {
             console.log("receiving chunk " + i);
 
-
+            console.log( i < numChunks );
             if( i < numChunks ) {
 
                 var reader = new FileReader();
