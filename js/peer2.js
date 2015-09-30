@@ -29,11 +29,18 @@ var mediaSource = new MediaSource();
 
 var video = document.querySelector('video');
 video.src = window.URL.createObjectURL( mediaSource );
+
+mediaSource.addEventListener('sourceopen', callback, false);
+mediaSource.addEventListener('webkitsourceopen', callback, false);
+
 var sourceBuffer = mediaSource.addSourceBuffer( 'video/webm; codecs="vorbis,vp8"' );
 
 var numChunks = 5;
 
 var i = 0;
+
+function callback( e ) {
+
 
 peer.on( 'connection', function( conn ) {
     conn.on( 'data', function(uInt8Array) {
@@ -42,7 +49,7 @@ peer.on( 'connection', function( conn ) {
 
             var blob = new Blob( [uInt8Array], {type: 'video/webm'} );
 
-            sourceBuffer.appendBuffer( blob );
+            sourceBuffer.appendBuffer( new Uint8Array( e.target.result ) );
             
             if( video.paused ) {
                 video.play();
@@ -55,7 +62,9 @@ peer.on( 'connection', function( conn ) {
             i++; 
         }
         
-    }
+    });
+});
+
 }
 
 function GET(url, callback) {
