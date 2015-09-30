@@ -64,8 +64,9 @@ function sourceOpen(e) {
                         mediaSource.endOfStream();
                     }
 
-                    i++;
                 } 
+
+                i++;
             }
         
         });
