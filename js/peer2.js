@@ -49,7 +49,7 @@ function sourceOpen(e) {
 
                 //var reader = new FileReader();
 
-                sourceBuffer.on( 'update', function {
+                sourceBuffer.on( 'update', function() {
 
                     console.log( "reader onload" );
 
