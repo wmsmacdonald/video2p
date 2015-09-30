@@ -49,7 +49,7 @@ function sourceOpen(e) {
 
                 //var reader = new FileReader();
 
-                sourceBuffer.on( 'update' ) {
+                sourceBuffer.on( 'update', function {
 
                     console.log( "reader onload" );
 
@@ -65,7 +65,7 @@ function sourceOpen(e) {
                         mediaSource.endOfStream();
                     }
 
-                } 
+                }); 
 
                 i++;
             }
