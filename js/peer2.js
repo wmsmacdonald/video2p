@@ -45,21 +45,27 @@ function sourceOpen(e) {
         conn.on( 'data', function(uInt8Array) {
             console.log("receiving chunk " + i);
 
+
             if( i < numChunks ) {
-    
-                var blob = new Blob( [uInt8Array], {type: 'video/webm'} );
+
+                var reader = new FileReader();
+
+                reader.onload = function( idx ) {
+
+                    var blob = new Blob( [uInt8Array], {type: 'video/webm'} );
                 
-                sourceBuffer.appendBuffer( new Uint8Array( e.target.result ) );
+                    sourceBuffer.appendBuffer( new Uint8Array( e.target.result ) );
              
-                if( video.paused ) {
-                    video.play();
-                }
+                    if( video.paused ) {
+                        video.play();
+                    }
 
-                if( i === numChunks - 1 ) {
-                    mediaSource.endOfStream();
-                }
+                    if( i === numChunks - 1 ) {
+                        mediaSource.endOfStream();
+                    }
 
-                i++; 
+                    i++;
+                } 
             }
         
         });
