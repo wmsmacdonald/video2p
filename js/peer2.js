@@ -45,7 +45,6 @@ function sourceOpen(e) {
         conn.on( 'data', function(uInt8Array) {
             console.log("receiving chunk " + i);
 
-            console.log( i < numChunks );
             if( i < numChunks ) {
 
                 var reader = new FileReader();
@@ -54,7 +53,7 @@ function sourceOpen(e) {
 
                     var blob = new Blob( [uInt8Array], {type: 'video/webm'} );
                 
-                    sourceBuffer.appendBuffer( new Uint8Array( e.target.result ) );
+                    sourceBuffer.appendBuffer( uInt8Array );
              
                     if( video.paused ) {
                         video.play();
