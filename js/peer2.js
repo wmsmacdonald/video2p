@@ -47,9 +47,9 @@ function sourceOpen(e) {
 
             if( i < numChunks ) {
 
-                var reader = new FileReader();
+                //var reader = new FileReader();
 
-                reader.onload = function( idx ) {
+                sourceBuffer.on( 'update' ) {
 
                     console.log( "reader onload" );
 
