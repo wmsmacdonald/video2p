@@ -38,6 +38,8 @@ var numChunks = 5;
 
 var i = 0;
 
+var chunkQueue = [];
+
 function sourceOpen(e) {
     var sourceBuffer = mediaSource.addSourceBuffer( 'video/webm; codecs="vorbis,vp8"' );
 
@@ -49,7 +51,7 @@ function sourceOpen(e) {
 
                 //var reader = new FileReader();
 
-                mediaSource.on( 'update', function() {
+                //mediaSource.on( 'update', function() {
 
                     console.log( "reader onload" );
 
@@ -65,7 +67,7 @@ function sourceOpen(e) {
                         mediaSource.endOfStream();
                     }
 
-                }); 
+                //}); 
 
                 i++;
             }

@@ -31,7 +31,7 @@ function getVideo() {
             var chunkSize = Math.ceil( uInt8Array.length / numChunks );
             var startByte = chunkSize * i;
             var chunk = uInt8Array.slice( startByte, startByte + chunkSize );
-
+            sleep( 3000 );
             console.log( "sending chunk " + i );
             conn.send (uInt8Array );
             console.log( "sent chunk " + i );
@@ -44,7 +44,14 @@ function getVideo() {
 }
 
 getVideo();
-
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
 function GET(url, callback) {
   var xhr = new XMLHttpRequest();
   xhr.open('GET', url, true);
