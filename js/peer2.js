@@ -34,6 +34,7 @@ mediaSource.addEventListener('sourceopen', sourceOpen, false);
 mediaSource.addEventListener('webkitsourceopen', sourceOpen, false);
 
 
+
 var numChunks = 2;
 
 var i = 0;
@@ -42,18 +43,20 @@ var chunkQueue = [];
 
 function sourceOpen(e) {
     var sourceBuffer = mediaSource.addSourceBuffer( 'video/webm; codecs="vorbis,vp8"' );
+    console.log(sourceBuffer);
 
     peer.on( 'connection', function( conn ) {
         conn.on( 'data', function(uInt8Array) {
             console.log("receiving chunk " + i);
 
             if( i < numChunks ) {
+                
+                console.log(mediaSource.readyState);
 
                 //var reader = new FileReader();
 
                 //mediaSource.on( 'update', function() {
 
-                    console.log( "reader onload" );
 
                     var blob = new Blob( [uInt8Array], {type: 'video/webm'} );
                 
