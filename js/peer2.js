@@ -34,7 +34,7 @@ mediaSource.addEventListener('sourceopen', sourceOpen, false);
 mediaSource.addEventListener('webkitsourceopen', sourceOpen, false);
 
 
-var numChunks = 1;
+var numChunks = 2;
 
 var i = 0;
 
