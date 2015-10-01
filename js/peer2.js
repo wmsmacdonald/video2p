@@ -67,7 +67,9 @@ function sourceOpen(e) {
                     }
 
                     if( i === numChunks - 1 ) {
-                        mediaSource.endOfStream();
+                        mediaSource.addEventListener('updateend', function() {
+                            mediaSource.endOfStream();
+                        });
                     }
 
                 //}); 
