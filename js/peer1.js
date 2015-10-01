@@ -14,7 +14,7 @@ var conn = peer.connect('2');
 
 var video = document.querySelector('video');
 
-var numChunks = 2;
+var numChunks = 5;
 
 var i = 0;
 function getVideo() {
