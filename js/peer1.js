@@ -12,10 +12,9 @@ var peer = new Peer('1', {host: 'quotacle.com', port: 9000, path: '/', debug: tr
 
 var conn = peer.connect('2');
 
-
 var video = document.querySelector('video');
 
-var numChunks = 5;
+var numChunks = 1;
 
 var i = 0;
 function getVideo() {
