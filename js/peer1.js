@@ -17,7 +17,7 @@ var video = document.querySelector('video');
 var numChunks = 5;
 var i = 0;
 function getVideo() {
-  GET('/video.webm', function(uInt8Array) {
+  GET('/chrome.webm', function(uInt8Array) {
 
     conn.on('open', function() {
         
