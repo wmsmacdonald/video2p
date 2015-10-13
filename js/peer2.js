@@ -43,8 +43,8 @@ function sourceOpen(e) {
                     mediaSource.addEventListener('updateend', function() {
                         mediaSource.endOfStream();
                     });
-                    var combinedBlob = new Blob( chunks );
-                    GET("/video.webm", function( uInt8Array ) {
+                    //var combinedBlob = new Blob( chunks );
+                    /*GET("/video.webm", function( uInt8Array ) {
                         var blob = new Blob( uInt8Array );
                         if ( blob == combinedBlob ) {
                             console.log( "No data loss." );
@@ -52,7 +52,7 @@ function sourceOpen(e) {
                         else {
                             console.log( "Data loss." );
                         }
-                    });
+                    });*/
 
                 }
 
