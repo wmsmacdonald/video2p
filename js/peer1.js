@@ -15,13 +15,11 @@ var conn = peer.connect('2');
 var video = document.querySelector('video');
 
 var numChunks = 5;
-
+var numSent = 0;
+var chunks = [];
 var i = 0;
 function getVideo() {
-  GET('/chrome.webm', function(uInt8Array) {
-    /*var blob = new Blob([uInt8Array], {
-      type: 'video/webm'
-    });*/
+  GET('/video.webm', function(uInt8Array) {
 
     conn.on('open', function() {
         
@@ -30,27 +28,34 @@ function getVideo() {
             var chunkSize = Math.ceil( uInt8Array.length / numChunks );
             var startByte = chunkSize * i;
             var chunk = uInt8Array.slice( startByte, startByte + chunkSize );
-            sleep( 3000 );
+            chunks[i] = chunk;
+            //sleep(5000);
+            //numSent++;
             console.log( "sending chunk " + i );
-            conn.send (uInt8Array );
+            conn.send (chunk );
             console.log( "sent chunk " + i );
-            
+
+            /*setTimeout(function() {
+                numSent++;
+                console.log( "sending chunk " + numSent );
+                conn.send (chunks[numSent - 1] );
+                console.log( "sent chunk " + numSent );
+
+            }, 5000 * numSent);*/
+
             i++;
         }
     });
-    //writeToFile(fileEntry, blob);
   });
 }
 
 getVideo();
-function sleep(milliseconds) {
-  var start = new Date().getTime();
-  for (var i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
-      break;
-    }
-  }
+
+function sleep(delay) {
+    var start = new Date().getTime();
+    while (new Date().getTime() < start + delay);
 }
+
 function GET(url, callback) {
   var xhr = new XMLHttpRequest();
   xhr.open('GET', url, true);

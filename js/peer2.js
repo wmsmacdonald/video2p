@@ -9,7 +9,7 @@
 //
 
 var peer = new Peer('2', {host: 'quotacle.com', port: 9000, path: '/'});
-function getVideo(fileEntry) {
+/*function getVideo(fileEntry) {
   peer.on('connection', function(conn){
     conn.on('data', function(uInt8Array){
       var blob = new Blob([uInt8Array], {
@@ -18,7 +18,7 @@ function getVideo(fileEntry) {
       writeToFile(fileEntry, blob);
     });
   }); 
-}
+}*/
 
 window.MediaSource = window.MediaSource || window.WebKitMediaSource;
 if (!!!window.MediaSource) {
@@ -53,11 +53,6 @@ function sourceOpen(e) {
                 
                 console.log(mediaSource.readyState);
 
-                //var reader = new FileReader();
-
-                //mediaSource.on( 'update', function() {
-
-
                     var blob = new Blob( [uInt8Array], {type: 'video/webm'} );
                 
                     sourceBuffer.appendBuffer( uInt8Array );
@@ -71,8 +66,6 @@ function sourceOpen(e) {
                             mediaSource.endOfStream();
                         });
                     }
-
-                //}); 
 
                 i++;
             }
