@@ -24,11 +24,11 @@ function getVideo() {
         while( i < numChunks ) {
 
             var chunkSize = Math.ceil( uInt8Array.length / numChunks );
-            console.log( "chunk size: " + chunkSize );
+            //console.log( "chunk size: " + chunkSize );
             var startByte = chunkSize * i;
-            console.log( "start byte: " + startByte );
+            //console.log( "start byte: " + startByte );
             var chunk = uInt8Array.slice( startByte, startByte + chunkSize );
-            sleep(5000);
+            sleep(2000);
             console.log( "sending chunk " + i );
             conn.send (chunk );
             console.log( "sent chunk " + i );

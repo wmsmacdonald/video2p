@@ -17,7 +17,7 @@ mediaSource.addEventListener('webkitsourceopen', sourceOpen, false);
 
 var i = 0;
 var chunks = [];
-var numChunks = 5;
+var numChunks = 1;
 
 function sourceOpen(e) {
     var sourceBuffer = mediaSource.addSourceBuffer( 'video/webm; codecs="vorbis,vp8"' );
