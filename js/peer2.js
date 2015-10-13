@@ -1,24 +1,6 @@
 'use strict';
 
-/* globals FileError */
-
-// get video file via XHR
-// store with File API
-// read Blob from File API and set as video src using createObjectUrl()
-// play video
-//
-
 var peer = new Peer('2', {host: 'quotacle.com', port: 9000, path: '/'});
-/*function getVideo(fileEntry) {
-  peer.on('connection', function(conn){
-    conn.on('data', function(uInt8Array){
-      var blob = new Blob([uInt8Array], {
-        type: 'video/webm'
-      }); 
-      writeToFile(fileEntry, blob);
-    });
-  }); 
-}*/
 
 window.MediaSource = window.MediaSource || window.WebKitMediaSource;
 if (!!!window.MediaSource) {
@@ -33,13 +15,8 @@ video.src = window.URL.createObjectURL( mediaSource );
 mediaSource.addEventListener('sourceopen', sourceOpen, false);
 mediaSource.addEventListener('webkitsourceopen', sourceOpen, false);
 
-
-
-var numChunks = 5;
-
 var i = 0;
-
-var chunkQueue = [];
+var chunks = [];
 
 function sourceOpen(e) {
     var sourceBuffer = mediaSource.addSourceBuffer( 'video/webm; codecs="vorbis,vp8"' );
@@ -49,23 +26,34 @@ function sourceOpen(e) {
         conn.on( 'data', function(uInt8Array) {
             console.log("receiving chunk " + i);
 
-            if( i < numChunks ) {
+            if( i  < numChunks ) {
+
+                chunks.push( uInt8Array );
                 
                 console.log(mediaSource.readyState);
 
-                    var blob = new Blob( [uInt8Array], {type: 'video/webm'} );
-                
-                    sourceBuffer.appendBuffer( uInt8Array );
+                sourceBuffer.appendBuffer( uInt8Array );
              
-                    if( video.paused ) {
-                        video.play();
+                if( video.paused ) {
+                    video.play();
+                }
+
+                if( i === numChunks - 1 ) {
+                    mediaSource.addEventListener('updateend', function() {
+                        mediaSource.endOfStream();
+                    });
+                    var combinedBlob = new Blob( chunks );
+                    GET("/video.webm", function( uInt8Array ) {
+                        var blob = new Blob( uInt8Array );
+                        if ( blob == combinedBlob ) {
+                            console.log( "No data loss." );
+                        }
+                        else {
+                            console.log( "Data loss." );
+                        }
                     }
 
-                    if( i === numChunks - 1 ) {
-                        mediaSource.addEventListener('updateend', function() {
-                            mediaSource.endOfStream();
-                        });
-                    }
+                }
 
                 i++;
             }
