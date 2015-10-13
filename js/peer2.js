@@ -51,7 +51,7 @@ function sourceOpen(e) {
                         else {
                             console.log( "Data loss." );
                         }
-                    }
+                    });
 
                 }
 
