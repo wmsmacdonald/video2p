@@ -16,8 +16,7 @@ mediaSource.addEventListener('sourceopen', sourceOpen, false);
 mediaSource.addEventListener('webkitsourceopen', sourceOpen, false);
 
 var i = 0;
-var chunks = [];
-var numChunks = 1;
+var numChunks = 15;
 
 function sourceOpen(e) {
     var sourceBuffer = mediaSource.addSourceBuffer( 'video/webm; codecs="vorbis,vp8"' );
@@ -29,8 +28,6 @@ function sourceOpen(e) {
 
             if( i  < numChunks ) {
 
-                chunks.push( uInt8Array );
-                
                 console.log(mediaSource.readyState);
 
                 sourceBuffer.appendBuffer( uInt8Array );
@@ -38,23 +35,11 @@ function sourceOpen(e) {
                 if( video.paused ) {
                     video.play();
                 }
-
                 if( i === numChunks - 1 ) {
                     mediaSource.addEventListener('updateend', function() {
                         mediaSource.endOfStream();
                     });
-                    //var combinedBlob = new Blob( chunks );
-                    /*GET("/video.webm", function( uInt8Array ) {
-                        var blob = new Blob( uInt8Array );
-                        if ( blob == combinedBlob ) {
-                            console.log( "No data loss." );
-                        }
-                        else {
-                            console.log( "Data loss." );
-                        }
-                    });*/
-
-                }
+                 }
 
                 i++;
             }
@@ -78,5 +63,3 @@ function GET(url, callback) {
     callback(new Uint8Array(xhr.response));
   };
 }
-
-
