@@ -14,7 +14,7 @@ var conn = peer.connect('2');
 
 var video = document.querySelector('video');
 
-var numChunks = 5;
+var numChunks = 15;
 var i = 0;
 function getVideo() {
   GET('/chrome.webm', function(uInt8Array) {
@@ -28,7 +28,7 @@ function getVideo() {
             var startByte = chunkSize * i;
             //console.log( "start byte: " + startByte );
             var chunk = uInt8Array.slice( startByte, startByte + chunkSize );
-            sleep(2000);
+            //sleep(2000);
             console.log( "sending chunk " + i );
             conn.send (chunk );
             console.log( "sent chunk " + i );
