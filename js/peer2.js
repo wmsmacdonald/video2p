@@ -16,7 +16,8 @@ mediaSource.addEventListener('sourceopen', sourceOpen, false);
 mediaSource.addEventListener('webkitsourceopen', sourceOpen, false);
 
 var i = 0;
-var numChunks = 15;
+var numChunks = 500;
+var chunkQueue = [];
 
 function sourceOpen(e) {
     var sourceBuffer = mediaSource.addSourceBuffer( 'video/webm; codecs="vorbis,vp8"' );
@@ -27,25 +28,43 @@ function sourceOpen(e) {
             console.log("receiving chunk " + i);
 
             if( i  < numChunks ) {
-
-                console.log(mediaSource.readyState);
-
-                sourceBuffer.appendBuffer( uInt8Array );
-             
-                if( video.paused ) {
-                    video.play();
+                //chunkQueue.push( sourceBuffer.appendBuffer( uInt8Array ) );
+                if ( sourceBuffer.updating ) {
+                    sourceBuffer.addEventListener( 'updateend', function() { sourceBuffer.appendBuffer( uInt8Array ) } );
+		}
+		else {
+                    sourceBuffer.appendBuffer( uInt8Array );
                 }
-                if( i === numChunks - 1 ) {
-                    mediaSource.addEventListener('updateend', function() {
-                        mediaSource.endOfStream();
-                    });
-                 }
+                /*if( i === numChunks - 1 ) {
+                    chunkQueue.push( "end" );
+                }*/
 
                 i++;
             }
         
         });
     });
+
+    var loadChunk = function() {
+        if( chunkQueue.length !== 0) {
+            if ( !sourceBuffer.updating ) {
+                sourceBuffer.appendBuffer( chunkQueue.shift() );
+            }
+        }
+        
+        /*else if ( chunkQueue[0] === "end" ) {
+            mediaSource.endOfStream();
+        }*/
+    }
+
+    //setTimeout( loadChunk, 1000 );
+
+    /*sourceBuffer.addEventListener( 'updateend', function() {
+	if( chunkQueue.length !== 0) {
+            console.log( "appending buffer" );
+            sourceBuffer.appendBuffer( chunkQueue.shift() );
+        }
+    } );*/
 }
 
 function GET(url, callback) {
