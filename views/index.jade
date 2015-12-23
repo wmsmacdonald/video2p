@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  script(src="javascripts/webrtc.js")
+  br
+  input(type="button", id="start", onclick="start(true)", value="Start Video")
+  script pageReady();
+  p(id="localChat")
+  p(id="remoteChat")
+
+
+

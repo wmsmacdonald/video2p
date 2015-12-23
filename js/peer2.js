@@ -1,6 +1,6 @@
 'use strict';
 
-var peer = new Peer('2', {host: 'quotacle.com', port: 9000, path: '/'});
+var peer = new Peer('2', {host: 'quotacle.com', port: 9000, path: '/', debug: true});
 
 window.MediaSource = window.MediaSource || window.WebKitMediaSource;
 if (!!!window.MediaSource) {
@@ -25,7 +25,8 @@ function sourceOpen(e) {
 
     peer.on( 'connection', function( conn ) {
         conn.on( 'data', function(uInt8Array) {
-            console.log("receiving chunk " + i);
+          console.log(uInt8Array);
+            /*console.log("receiving chunk " + i);
 
             if( i  < numChunks ) {
                 //chunkQueue.push( sourceBuffer.appendBuffer( uInt8Array ) );
@@ -34,14 +35,14 @@ function sourceOpen(e) {
 		}
 		else {
                     sourceBuffer.appendBuffer( uInt8Array );
-                }
+                }*/
                 /*if( i === numChunks - 1 ) {
                     chunkQueue.push( "end" );
                 }*/
 
-                i++;
-            }
-        
+                /*i++;
+            }*/
+
         });
     });
 
@@ -51,7 +52,7 @@ function sourceOpen(e) {
                 sourceBuffer.appendBuffer( chunkQueue.shift() );
             }
         }
-        
+
         /*else if ( chunkQueue[0] === "end" ) {
             mediaSource.endOfStream();
         }*/
