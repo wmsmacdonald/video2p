@@ -1,7 +1,7 @@
-var numChunks = 5;
+var numChunks = 1000;
 var i = 0;
 function sendVideo() {
-    GET('videos/test.webm', function (uInt8Array) {
+    GET('videos/long_video.webm', function (uInt8Array) {
         var chunkSize = Math.ceil(uInt8Array.length / numChunks);
 
         while (i < numChunks) {

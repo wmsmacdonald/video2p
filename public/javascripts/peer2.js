@@ -14,48 +14,29 @@ $(document).ready(function() {
 mediaSource.addEventListener('sourceopen', sourceOpen, false);
 mediaSource.addEventListener('webkitsourceopen', sourceOpen, false);
 
-var i = 0;
-var numChunks = 5;
 var chunkQueue = [];
 var sourceBuffer;
-var error = false;
 
 function sourceOpen(e) {
     sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vorbis,vp8"');
     console.log(sourceBuffer);
-    sourceBuffer.addEventListener('updateend', function appendBuffer() {
-        console.log("finished appending");
-        if (chunkQueue.length > 0 && !sourceBuffer.updating) {
-            console.log("queue append " + i);
-            sourceBuffer.appendBuffer(chunkQueue.shift());
-        }
-    });
+    sourceBuffer.addEventListener('updateend', appendBuffer);
 }
 
+var chunksReceived = 0;
 function onReceiveMessageCallback(event) {
-    if (!error) {
-        console.log(event.data);
-        if (sourceBuffer.updating || chunkQueue > 0) {
-            chunkQueue.push(event.data);
-        }
-        else {
-            console.log("empty");
-            try {
-                sourceBuffer.appendBuffer(event.data);
-            }
-            catch (e) {
-                error = true;
-                console.log("failed at " + i);
-                throw e;
-            }
-        }
-    }
-    i++;
+    console.log("recieving chunk " + chunksReceived);
+    chunksReceived++;
+    chunkQueue.push(event.data);
+    appendBuffer();
 }
 
+var chunksAdded = 0;
 function appendBuffer() {
     if (chunkQueue.length > 0 && !sourceBuffer.updating) {
+        console.log("appending buffer " + chunksAdded);
         sourceBuffer.appendBuffer(chunkQueue.shift());
+        chunksAdded++;
     }
 }
 
