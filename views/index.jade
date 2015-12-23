@@ -1,12 +1,10 @@
 extends layout
 
 block content
-  script(src="javascripts/webrtc.js")
+  a(href="peer1") Peer1
   br
-  input(type="button", id="start", onclick="start(true)", value="Start Video")
-  script pageReady();
-  p(id="localChat")
-  p(id="remoteChat")
+  br
+  a(href="peer2") Peer2
 
 
 

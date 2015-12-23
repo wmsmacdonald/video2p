@@ -1,5 +1,3 @@
-var localVideo;
-var remoteVideo;
 var peerConnection;
 var peerConnectionConfig = {'iceServers': [{'url': 'stun:stun.services.mozilla.com'}, {'url': 'stun:stun.l.google.com:19302'}]};
 var channel;
@@ -66,22 +64,19 @@ function gotDescription(description) {
     );
 }
 
-function trace(str) { console.log(str) }
-
 function receiveChannelCallback(event) {
-    trace('Receive Channel Callback');
+    console.log('Receive Channel Callback');
     recieveChannel = event.channel;
     recieveChannel.onmessage = onReceiveMessageCallback;
 }
 
 function onReceiveMessageCallback(event) {
-    trace('Received Message');
-    console.log(event.data);
+    console.log('Received Message');
 }
 
 function onSendChannelStateChange() {
     var readyState = channel.readyState;
-    trace('Send channel state is: ' + readyState);
+    console.log('Send channel state is: ' + readyState);
 }
 
 function errorHandler(error) {
