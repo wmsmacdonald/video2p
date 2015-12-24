@@ -1,3 +1,4 @@
+var WS_HOST = 'ws://127.0.0.1:3434';
 var peerConnection;
 var peerConnectionConfig = {'iceServers': [{'url': 'stun:stun.services.mozilla.com'}, {'url': 'stun:stun.l.google.com:19302'}]};
 var channel;
@@ -11,7 +12,7 @@ window.RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSess
 
 function pageReady() {
 
-    serverConnection = new WebSocket('ws://127.0.0.1:3434');
+    serverConnection = new WebSocket(WS_HOST);
     serverConnection.onmessage = gotMessageFromServer;
 
     var constraints = {
