@@ -15,11 +15,6 @@ function pageReady() {
     serverConnection = new WebSocket(WS_HOST);
     serverConnection.onmessage = gotMessageFromServer;
 
-    var constraints = {
-        video: true,
-        audio: false
-    };
-
 }
 
 function start(isCaller) {
