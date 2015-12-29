@@ -36,15 +36,16 @@ function gotMessageFromServer(message) {
 }
 
 function gotIceCandidate(event) {
+    console.log('got ice candidate');
     if(event.candidate != null) {
-        serverConnection.send(JSON.stringify({'ice': event.candidate}));
+        serverConnection.send(JSON.stringify({signaling: true, 'ice': event.candidate}));
     }
 }
 
 function gotDescription(description) {
     console.log('got description');
     peerConnection.setLocalDescription(description, function () {
-            serverConnection.send(JSON.stringify({'sdp': description}));
+            serverConnection.send(JSON.stringify({signaling: true, 'sdp': description}));
         },
         function() {
             console.log('set description error')
