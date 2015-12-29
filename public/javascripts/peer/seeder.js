@@ -1,38 +1,40 @@
-var WS_HOST = 'ws://127.0.0.1:3434';
-var peerConnection;
-var peerConnectionConfig = {'iceServers': [{'url': 'stun:stun.services.mozilla.com'}, {'url': 'stun:stun.l.google.com:19302'}]};
-var channel;
-var dataConstraint;
-var receiveChannel;
-
-navigator.getUserMedia = navigator.getUserMedia || navigator.mozGetUserMedia || navigator.webkitGetUserMedia;
-window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
-window.RTCIceCandidate = window.RTCIceCandidate || window.mozRTCIceCandidate || window.webkitRTCIceCandidate;
-window.RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSessionDescription || window.webkitRTCSessionDescription;
-
-function pageReady() {
-    serverConnection = new WebSocket(WS_HOST);
-    serverConnection.onmessage = gotMessageFromServer;
+function startSeeding() {
+    serverConnection.send({ seeder: true });
 }
 
-function setupPeerConnection() {
+serverConnection.onmessage = gotMessageFromServer;
+
+function gotMessageFromServer(message) {
+    var data = JSON.parse(message.data);
+
+    if (data.beginPeerConnection) {
+        beginPeerConnection();
+    }
+    else if (data.signaling) {
+        handleSignaling(data);
+    }
+    else {
+        SocketsError.unexpected(['beginSeeding','signaling'], data);
+    }
+}
+
+function beginPeerConnection() {
     peerConnection = new RTCPeerConnection(peerConnectionConfig);
     channel = peerConnection.createDataChannel('sendDataChannel', dataConstraint);
     peerConnection.onicecandidate = gotIceCandidate;
     channel.onopen = onSendChannelStateChange;
-    //peerConnection.ondatachannel = receiveChannelCallback;
+    peerConnection.ondatachannel = receiveChannelCallback;
 
     peerConnection.createOffer(gotDescription, errorHandler);
 }
 
-function gotMessageFromServer(message) {
-
-    var signal = JSON.parse(message.data);
+function handleSignaling(signal) {
     if(signal.sdp) {
         peerConnection.setRemoteDescription(new RTCSessionDescription(signal.sdp), function() {
             peerConnection.createAnswer(gotDescription, errorHandler);
         }, errorHandler);
-    } else if(signal.ice) {
+    }
+    else if(signal.ice) {
         peerConnection.addIceCandidate(new RTCIceCandidate(signal.ice));
     }
 }
@@ -46,7 +48,7 @@ function gotIceCandidate(event) {
 function gotDescription(description) {
     console.log('got description');
     peerConnection.setLocalDescription(description, function () {
-            serverConnection.send(JSON.stringify({'sdp': description}));
+            serverConnection.send(JSON.stringify({ signaling: true, sdp: description}));
         },
         function() {
             console.log('set description error')

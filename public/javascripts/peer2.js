@@ -37,7 +37,11 @@ function appendBuffer() {
         console.log("appending buffer " + chunksAdded);
         sourceBuffer.appendBuffer(chunkQueue.shift());
         chunksAdded++;
+        if (chunksAdded > 50) {
+            video.play();
+        }
     }
+
 }
 
 function GET(url, callback) {

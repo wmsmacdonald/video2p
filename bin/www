@@ -94,15 +94,53 @@ var WebSocketServer = require('ws').Server;
 
 var wss = new WebSocketServer({port: 3434});
 
-wss.broadcast = function(data) {
-  for(var i in this.clients) {
-    this.clients[i].send(data);
-  }
-};
+
+var seeders = [];
+var leechers = {};
+
+var util = require('util');
 
 wss.on('connection', function(ws) {
   ws.on('message', function(message) {
-    console.log('received: %s', message);
-    wss.broadcast(message);
+    message = JSON.parse(message);
+    console.log('message');
+    // is peer signaling message
+    if (message.signaling) {
+      handleSignal(ws, message);
+    }
+    else if (message.seeder) {
+      seeders.push(ws);
+    }
+    else if (message.askForSource) {
+      console.log("askforsource");
+      sourceAnswer(ws);
+    }
+    else {
+      console.log("Unrecognized message. " + JSON.stringify(message));
+    }
+  });
+
+  ws.on('close', function close() {
+    delete seeders[ws.id];
   });
 });
+
+function sourceAnswer(ws) {
+  if (Object.keys(seeders).length == 0) {
+    ws.send(JSON.stringify({ server: true }));
+  }
+  else {
+    var seeder = seeders.pop();
+    leechers.push(ws);
+    // linking seeder with leecher
+    seeder.peer = ws;
+    ws.peer = seeder;
+    ws.send({ beginPeerConnection: true });
+    seeder.send({ beginPeerConnection: true });
+  }
+}
+
+function handleSignal(ws, message) {
+  console.log('received: %s', message);
+  ws.peer.send(message);
+}

@@ -1,10 +1,12 @@
 extends layout
 
 block content
-  a(href="peer1") Peer1
-  br
-  br
-  a(href="peer2") Peer2
+  script(src="javascripts/websockets.js")
+  script(src="javascripts/video/fetch.js")
+  script(src="javascripts/video/load.js")
+  script(src="javascripts/peer.js")
+
+  video(controls, muted)
 
 
 
