@@ -1,13 +1,11 @@
 serverConnection = new WebSocket(WS_HOST);
 serverConnection.onmessage = gotMessageFromServer;
-var seeder = false;
 
 serverConnection.onopen = function askForSource() {
     serverConnection.send(JSON.stringify({ askForSource: true }));
 };
 
 function gotMessageFromServer(message) {
-
     var data = JSON.parse(message.data);
 
     if (data.server) {
@@ -15,7 +13,6 @@ function gotMessageFromServer(message) {
     }
 
     else if (data.beginLeecher) {
-        console.log("Fetching video from peer.")
         setUpLeecher();
     }
 
@@ -24,18 +21,13 @@ function gotMessageFromServer(message) {
     }
 
     else if (data.signaling) {
-        handleSignaling(data.signaling);
+        handleSignaling(data);
     }
 
-    else if (data.test) {
-        console.log("test");
-    }
     else {
-        SocketsError.unexpected(['server','beginLeecher','beginSeeder','data.signaling'], data);
+        SocketsError.unexpected(['server','beginLeecher','beginSeeder','signaling'], data);
     }
 }
-
-
 
 function GET(url, callback) {
     var xhr = new XMLHttpRequest();

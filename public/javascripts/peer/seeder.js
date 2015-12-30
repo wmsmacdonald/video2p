@@ -8,6 +8,7 @@ function startSeeding() {
 serverConnection.onmessage = gotMessageFromServer;
 
 function setUpSeeder() {
+    console.log("Starting to seed peer.")
     peerConnection = new RTCPeerConnection(peerConnectionConfig);
     seederChannel = peerConnection.createDataChannel('sendDataChannel', {});
     peerConnection.onicecandidate = gotIceCandidate;
@@ -18,12 +19,8 @@ function setUpSeeder() {
 
 
 function sendVideoData() {
-    var chunkSize = Math.ceil(videoData.length / numChunks);
-
-    for (var i = 0; i < numChunks; i++) {
-        var startByte = chunkSize * i;
-        var chunk = videoData.slice(startByte, startByte + chunkSize);
-        seederChannel.send(chunk)
+    for (var i = 0; i < chunks.length; i++) {
+        seederChannel.send(chunks[i]);
     }
     startSeeding();
 }

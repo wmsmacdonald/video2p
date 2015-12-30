@@ -1,4 +1,5 @@
-var videoChunkQueue = [];
+var chunks = [];
+var chunkPos = 0;
 var numChunks = 1000;
 
 window.MediaSource = window.MediaSource || window.WebKitMediaSource;
@@ -14,28 +15,25 @@ mediaSource.addEventListener('sourceopen', sourceOpen, false);
 mediaSource.addEventListener('webkitsourceopen', sourceOpen, false);
 var sourceBuffer;
 
-function sourceOpen(e) {
+function sourceOpen() {
     sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vorbis,vp8"');
+    tryToAppendNextChunk();
     sourceBuffer.addEventListener('updateend', tryToAppendNextChunk);
 }
 
 function loadFullVideo(uInt8Array) {
-    videoData = uInt8Array;
-    var chunkSize = Math.ceil(videoData.length / numChunks);
-
-    for (var i = 0; i < numChunks; i++) {
-        var startByte = chunkSize * i;
-        var chunk = videoData.slice(startByte, startByte + chunkSize);
-        videoChunkQueue.push(chunk);
-        tryToAppendNextChunk();
-    }
+    chunks = splitIntoChunks(uInt8Array, numChunks);
+    tryToAppendNextChunk();
     console.log("Video fetched from server.");
     startSeeding();
 }
 
 function loadByChunk(chunk) {
-    videoChunkQueue.push(chunk);
+    chunks.push(chunk);
     tryToAppendNextChunk();
+    if (chunks.length == numChunks) {
+        startSeeding();
+    }
 }
 
 $(document).ready(function() {
@@ -44,7 +42,21 @@ $(document).ready(function() {
 });
 
 function tryToAppendNextChunk() {
-    if (videoChunkQueue.length > 0 && !sourceBuffer.updating) {
-        sourceBuffer.appendBuffer(videoChunkQueue.shift());
+    if ((chunks.length - chunkPos) > 0
+    && !sourceBuffer.updating) {
+        sourceBuffer.appendBuffer(chunks[chunkPos]);
+        chunkPos++;
     }
+}
+
+function splitIntoChunks(uInt8Array, numChunks) {
+    var queue = [];
+    var chunkSize = Math.ceil(uInt8Array.length / numChunks);
+
+    for (var i = 0; i < numChunks; i++) {
+        var startByte = chunkSize * i;
+        var chunk = uInt8Array.slice(startByte, startByte + chunkSize);
+        queue.push(chunk);
+    }
+    return queue;
 }

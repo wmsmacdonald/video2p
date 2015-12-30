@@ -92,25 +92,25 @@ function onListening() {
 // websocket server
 var WebSocketServer = require('ws').Server;
 var wss = new WebSocketServer({port: 3434});
-wss.broadcast = function(data) {
-  for(var i in this.clients) {
-    this.clients[i].send(data);
-  }
-};
-var seeders = [];
+var seeders = {};
+var seederId = 0;
+
+var util = require('util');
 
 wss.on('connection', function(ws) {
   ws.on('message', function(message) {
-    /*console.log('Received: %s', JSON.stringify(message));
-    wss.broadcast(message);*/
     message = JSON.parse(message);
-    //console.log('message');
+
     // is peer signaling message
     if (message.signaling) {
       handleSignal(ws, message);
     }
     else if (message.seeder) {
-      seeders.push(ws);
+      ws.id = seederId;
+
+      seeders[seederId] = ws;
+      seederId++;
+      //console.log(util.inspect(seeders, false, null));
     }
     else if (message.askForSource) {
       sourceAnswer(ws);
@@ -126,26 +126,29 @@ wss.on('connection', function(ws) {
 });
 
 function sourceAnswer(ws) {
-  if (seeders.length == 0) {
+
+  if (Object.keys(seeders).length === 0) {
     ws.send(JSON.stringify({ server: true }));
   }
   else {
-    var seeder = seeders.pop();
+    var seeder = seeders[Object.keys(seeders)[0]];
+
+    // remove from available seeders (1 seeder to 1 leecher)
+    delete seeders[seeder.id];
+
     // linking seeder with leecher
     seeder.peer = ws;
     seeder.seeder = true;
-    //seeder.peer.send(JSON.stringify({ test: true }));
 
     ws.peer = seeder;
-    //ws.peer.send(JSON.stringify({ test: true }));
     ws.seeder = false;
+    console.log(JSON.stringify(seeder.id));
     ws.send(JSON.stringify({beginLeecher: true}));
     seeder.send(JSON.stringify({beginSeeder: true}));
   }
 }
 
 function handleSignal(ws, message) {
-  ws.peer.send(JSON.stringify({ test: true }));
   if (ws.seeder) {
     console.log('Sending from seeder to leecher: %s', JSON.stringify(message));
   }

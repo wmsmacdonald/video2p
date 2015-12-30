@@ -12,17 +12,22 @@ function handleSignaling(signal) {
         console.log("PeerConnection not initialized yet.");
     }
     else if(signal.sdp) {
+        console.log('Received remote SDP');
         peerConnection.setRemoteDescription(new RTCSessionDescription(signal.sdp), function() {
             peerConnection.createAnswer(gotDescription, errorHandler);
         }, errorHandler);
     }
     else if(signal.ice) {
+        console.log('Received remote ICE candidate');
         peerConnection.addIceCandidate(new RTCIceCandidate(signal.ice));
+    }
+    else {
+        console.log('signal not recognized');
     }
 }
 
 function gotIceCandidate(event) {
-    console.log('got ice candidate');
+    console.log('Got ice candidate');
     if(event.candidate != null) {
         serverConnection.send(JSON.stringify({signaling: true, 'ice': event.candidate}));
     }
