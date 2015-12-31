@@ -9,7 +9,7 @@ function gotMessageFromServer(message) {
     var data = JSON.parse(message.data);
 
     if (data.server) {
-        GET('videos/elephant_dream.webm', loadFullVideo);
+        GET('videos/test.webm', loadFullVideo);
     }
 
     else if (data.beginLeecher) {

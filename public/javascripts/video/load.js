@@ -1,6 +1,6 @@
 var chunks = [];
 var chunkPos = 0;
-var numChunks = 1000;
+var numChunks = 20;
 
 window.MediaSource = window.MediaSource || window.WebKitMediaSource;
 if (!window.MediaSource) {
