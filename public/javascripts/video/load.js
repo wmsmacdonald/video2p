@@ -8,7 +8,6 @@ if (!window.MediaSource) {
 }
 
 var video;
-var videoData;
 
 var mediaSource = new MediaSource();
 mediaSource.addEventListener('sourceopen', sourceOpen, false);

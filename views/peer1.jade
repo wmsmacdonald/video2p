@@ -1,9 +1,0 @@
-extends layout
-
-block content
-    script(src="javascripts/peerHost.js")
-    script(src="javascripts/peer1.js")
-    input(type="button", id="start", onclick="setupPeerConnection()", value="Connect Peer")
-    input(type="button", id="send", onclick="sendVideo()", value="Send Video")
-    script pageReady();
-
