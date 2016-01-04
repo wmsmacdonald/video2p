@@ -54,5 +54,7 @@ app.use(function(err, req, res, next) {
   });
 });
 
+app.use(express.static(__dirname+ '/node_modules/bootstrap/js'));
+
 
 module.exports = app;

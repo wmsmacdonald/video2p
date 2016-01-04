@@ -1,6 +1,7 @@
 var leecherChannel;
 
 function setUpLeecher() {
+    pageLog('setting up peer connection');
     console.log("Fetching video from peer.");
     peerConnection = new RTCPeerConnection(peerConnectionConfig);
     peerConnection.onicecandidate = gotIceCandidate;

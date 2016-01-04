@@ -126,7 +126,6 @@ wss.on('connection', function(ws) {
 });
 
 function sourceAnswer(ws) {
-
   if (Object.keys(seeders).length === 0) {
     ws.send(JSON.stringify({ server: true }));
   }

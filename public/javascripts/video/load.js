@@ -21,9 +21,12 @@ function sourceOpen() {
 }
 
 function loadFullVideo(uInt8Array) {
+    pageLog('video chunks received from server');
     chunks = splitIntoChunks(uInt8Array, numChunks);
     tryToAppendNextChunk();
     console.log("Video fetched from server.");
+    pageLog('video fully loaded');
+    video.play();
     startSeeding();
 }
 
@@ -31,6 +34,7 @@ function loadByChunk(chunk) {
     chunks.push(chunk);
     tryToAppendNextChunk();
     if (chunks.length == numChunks) {
+        pageLog('downloaded full video');
         startSeeding();
     }
 }
@@ -45,6 +49,10 @@ function tryToAppendNextChunk() {
     && !sourceBuffer.updating) {
         sourceBuffer.appendBuffer(chunks[chunkPos]);
         chunkPos++;
+        if (chunkPos == numChunks) {
+            pageLog('video fully loaded');
+            video.play();
+        }
     }
 }
 

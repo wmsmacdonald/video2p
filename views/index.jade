@@ -1,14 +1,31 @@
 extends layout
 
 block content
-  script(src="javascripts/websockets.js")
-  script(src="javascripts/video/fetch.js")
+  div(id="page")
+    h2 Peer to Peer Video Delivery Demo
+    hr
+    p In this demo, the browser forms a connection with a peer browser, if available, and downloads the video data directly from that peer. A signaling server negotiates the connections.
+
+    div(id="columns")
+      div(class="column")
+        div(id="video-box")
+          video(controls, muted)
+      div(class="column")
+        h4(id="log-title") Log
+        div(id="log-box")
+    p The signaling and content server is written in Node.js and uses WebSockets. The front end JavaScript takes advantage of the WebRTC APIs, particularly PeerConnection. It also uses the MediaSource API to append video chunks onto an URL object.
+    p This demo works only on the latest version of Chrome.
+
+    a(href="https://github.com/wmsmacdonald/video2p") Code on GitHub
+
+
+
+  script(src="javascripts/controller.js")
   script(src="javascripts/video/load.js")
-  script(src="javascripts/peer/peer.js")
+  script(src="javascripts/peer/signaling.js")
   script(src="javascripts/peer/seeder.js")
   script(src="javascripts/peer/leecher.js")
 
-  video(controls, muted)
 
 
 
